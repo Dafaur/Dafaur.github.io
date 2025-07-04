@@ -1,178 +1,209 @@
 <!DOCTYPE html>
-<html lang="en">
+    <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shawn‘s Website</title>
+    <title>Shawn's Website</title>
     <style>
-        *{
-            box-sizing: border-box;
-        }
-        
-        /* body 样式 */
-        body {
-            font-family: Arial;
-            margin: 0;
-        }
-        
-        /* 标题 */
-        .header {
-            padding: 80px;
-            text-align: center;
-            background: #1abc9c;
-            color: white;
-        }
-        
-        /* 标题字体加大 */
-        .header h1 {
-            font-size: 40px;
-        }
-        
-        /* 导航 */
-        .navbar {
-            overflow: hidden;
-            background-color: #333;
-            transition: background-color 0.3s; /* Add transition */
-            position: -webkit-sticky; /* For Safari */
-            position: sticky;
-            top: 0;
-            z-index: 1000; /* Ensure it stays on top */
-        }
-        
-        /* 导航栏样式 */
-        .navbar a {
-            float: left;
-            display: block;
-            color: white;
-            text-align: center;
-            padding: 16px 20px;
-            text-decoration: none;
-            transition: background-color 0.3s, color 0.3s; /* Add transition */
-        }
-        
-        /* 右侧链接*/
-        .navbar a.right {
-            float: right;
-        }
-        
-        /* 鼠标移动到链接的颜色 */
-        .navbar a:hover {
-            background-color: #ddd;
-            color: black;
-            animation: navbarLinkHover 0.3s forwards;
+        :root {
+            --primary: #1abc9c;
+            --nav-bg: #333;
+            --sidebar-bg: #f1f1f1;
+            --text: #333;
+            --bg: white;
+            --transition: 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
 
-        @keyframes navbarLinkHover {
-            from {
-                background-color: #333;
-                color: white;
-            }
-            to {
-                background-color: #ddd;
-                color: black;
-            }
+        /* 基础重置 */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            transition: background-color var(--transition), 
+                       color var(--transition),
+                       transform var(--transition);
         }
-        
-        /* 鼠标移动到导航栏的颜色 */
-        .navbar:hover {
-            background-color: #444;
+
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
         }
-        
-        /* 列容器 */
-        .row {  
-            display: -ms-flexbox; /* IE10 */
-            display: flex;
-            -ms-flex-wrap: wrap; /* IE10 */
-            flex-wrap: wrap;
+
+        /* 优雅的加载动画 */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-        
-        /* 创建两个列 */
-        /* 边栏 */
-        .side {
-            -ms-flex: 30%; /* IE10 */
-            flex: 30%;
-            background-color: #f1f1f1;
-            padding: 20px;
-        }
-        
-        /* 主要的内容区域 */
-        .main {   
-            -ms-flex: 70%; /* IE10 */
-            flex: 70%;
-            background-color: white;
-            padding: 20px;
-        }
-        
-        /* 测试图片 */
-        .fakeimg {
-            background-color: #aaa;
-            width: 100%;
-            padding: 20px;
-        }
-        
-        /* 底部 */
-        .footer {
-            padding: 20px;
+
+        /* 头部区域 */
+        .header {
+            padding: 6rem 2rem;
             text-align: center;
-            background: #ddd;
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
-        
-        /* 响应式布局 - 在屏幕设备宽度尺寸小于 700px 时, 让两栏上下堆叠显示 */
-        @media screen and (max-width: 700px) {
-            .row {   
-                flex-direction: column;
+
+        .header h1 {
+            font-size: 2.5rem;
+            letter-spacing: -0.025em;
+            animation: fadeIn 0.6s both;
+        }
+
+        /* 现代导航栏 */
+        .navbar {
+            background: var(--nav-bg);
+            padding: 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .navbar nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            position: relative;
+        }
+
+        .navbar a::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: width var(--transition);
+        }
+
+        .navbar a:hover::after {
+            width: 100%;
+        }
+
+        /* 卡片系统 */
+        .card {
+            background: var(--bg);
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 1.5rem 0;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeIn 0.6s forwards;
+            animation-delay: 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+        }
+
+        /* 布局系统 */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            display: grid;
+            gap: 2rem;
+            grid-template-columns: 250px 1fr;
+        }
+
+        .sidebar {
+            background: var(--sidebar-bg);
+            border-radius: 12px;
+            padding: 2rem;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+                padding: 1rem;
             }
-        }
-        
-        /* 响应式布局 - 在屏幕设备宽度尺寸小于 400px 时, 让导航栏目上下堆叠显示 */
-        @media screen and (max-width: 400px) {
-            .navbar a {
-                float: none;
-                width: 100%;
+            
+            .navbar nav {
+                justify-content: center;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Header section -->
-    <div class="header">
+    <header class="header">
         <h1>Shawn's Website</h1>
-        <p>Science and technology innovation - Pre 1.0.1</p>
-    </div>
+    </header>
 
-    <!-- Navigation bar -->
     <div class="navbar">
-        <a href="home">Home</a>
-        <a href="news">News</a>
-        <a href="contact">Contact</a>
-        <a href="about" class="right">About</a>
+        <nav>
+            <a href="home">Home</a>
+            <a href="work">Work</a>
+            <a href="contact">Contact</a>
+        </nav>
     </div>
 
-    <!-- Main content area -->
-    <div class="row">
-        <div class="main">
-            <h2>Our Project</h2>
-            <h5>Description</h5>
-            <div class="fakeimg" style="height:200px;">Image</div>
-            <p>Some text..</p>
-            <p>LOL</p>
-        </div>
-        <div class="side">
-            <h2>Designers</h2>
-            <h5>Photo of us:</h5>
-            <div class="fakeimg" style="height:200px;">Image</div>
-            <p>From Class 3 Grade 9.</p>
-            <h3>Special Thanks</h3>
-            <p>Teachers from SoongChingLingSchool</p>
-            <div class="fakeimg" style="height:60px;">Image</div><br>
-            <div class="fakeimg" style="height:60px;">Image</div><br>
-            <div class="fakeimg" style="height:60px;">Image</div>
-        </div>
-    </div>
+    <main class="container">
+        <aside class="sidebar" id="sidecard">
+            <div class="card">
+                <h2>About Me</h2>
+                <p>Designer & Developer</p>
+            </div>
+        </aside>
 
-    <!-- Footer section -->
-    <div class="footer">
-        <h2>By Shawn Lou</h2>
-    </div>
+        <section class="content">
+            <article class="card" id="work">
+                <h2>Latest Projects</h2>
+                <p>Discover my creative works...</p>
+            </article>
+            <article class="card" id="experience">
+                <h2>Experience</h2>
+                <p>Professional journey...</p>
+            </article>
+        </section>
+    </main>
+
+    <script>
+        // 平滑滚动
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // 卡片动画触发
+        const cards = document.querySelectorAll('.card');
+        cards.forEach((card, index) => {
+            card.style.animationDelay = `${index * 0.1}s`;
+        });
+
+        const card = document.querySelector('.card');
+        card && card.addEventListener('click', function(e) {
+          e.target.closest('a') || (location.href = 'about');
+        });
+
+        const workCard = document.getElementById('work');
+        workCard?.addEventListener('click', function(e) {
+            if (e.target.closest('a')) return;
+            window.location.href = 'work';
+        });
+
+        const experienceCard = document.getElementById('experience');
+        experienceCard?.addEventListener('click', function(e) {
+        if (e.target.closest('a')) return;
+        window.location.href = 'experience';
+        });
+    </script>
 </body>
 </html>
