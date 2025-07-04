@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+    <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -152,7 +152,7 @@
     </div>
 
     <main class="container">
-        <aside class="sidebar">
+        <aside class="sidebar" id="home">
             <div class="card">
                 <h2>About Me</h2>
                 <p>Designer & Developer</p>
@@ -160,12 +160,11 @@
         </aside>
 
         <section class="content">
-            <article class="card">
+            <article class="card" id="work">
                 <h2>Latest Projects</h2>
                 <p>Discover my creative works...</p>
             </article>
-
-            <article class="card">
+            <article class="card" id="experience">
                 <h2>Experience</h2>
                 <p>Professional journey...</p>
             </article>
@@ -187,6 +186,23 @@
         const cards = document.querySelectorAll('.card');
         cards.forEach((card, index) => {
             card.style.animationDelay = `${index * 0.1}s`;
+        });
+
+        const card = document.querySelector('.card');
+        card && card.addEventListener('click', function(e) {
+          e.target.closest('a') || (location.href = 'about.html');
+        });
+
+        const workCard = document.getElementById('work');
+        workCard?.addEventListener('click', function(e) {
+            if (e.target.closest('a')) return;
+            window.location.href = 'work';
+        });
+
+        const experienceCard = document.getElementById('experience');
+        experienceCard?.addEventListener('click', function(e) {
+        if (e.target.closest('a')) return;
+        window.location.href = 'experience';
         });
     </script>
 </body>
