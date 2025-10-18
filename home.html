@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-    <html lang="en">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,6 +12,7 @@
             --text: #333;
             --bg: white;
             --transition: 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            --navbar-height: 72px;
         }
 
         /* 基础重置 */
@@ -28,11 +29,17 @@
             background: var(--bg);
             color: var(--text);
             line-height: 1.6;
+            padding-top: var(--navbar-height);
         }
 
-        /* 优雅的加载动画 */
+        /* 加载动画 */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
@@ -40,9 +47,15 @@
         .header {
             padding: 6rem 2rem;
             text-align: center;
-            background: var(--primary);
             color: white;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            background: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.25)), url('images/Cover.jpg') center / cover no-repeat;
+            background-blend-mode: overlay;
+            min-height: 48vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
         }
 
         .header h1 {
@@ -51,44 +64,150 @@
             animation: fadeIn 0.6s both;
         }
 
-        /* 现代导航栏 */
-        .navbar {
-            background: var(--nav-bg);
-            padding: 1rem;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        .dark-judge-square {
+            position: absolute;
+            width: 100%;
+            height:100%;
+            border: 2px solid transparent;
+            top: 62%;
+            left: 50%;
+            transform: translate(-50%, -50%);
         }
 
-        .navbar nav {
+        /* Transparent / glass navbar */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: var(--navbar-height);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            padding: 0 1rem;
+            background: linear-gradient(to right, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+            border-bottom: 1px solid rgba(0,0,0,0.06);
+            backdrop-filter: blur(8px) saturate(120%);
+        }
+
+        .navbar .inner {
             max-width: 1200px;
             margin: 0 auto;
             display: flex;
-            gap: 1.5rem;
+            align-items: center;
+            width: 100%;
+            gap: 1rem;
         }
 
-        .navbar a {
-            color: white;
+        .brand {
+            color: var(--primary);
+            font-weight: 700;
+            letter-spacing: -0.02em;
             text-decoration: none;
-            padding: 0.5rem 1rem;
-            border-radius: 4px;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem;
+            transition: color var(--transition);
+        }
+
+        /* 当导航栏接触正方形时的样式 - 只改变链接颜色 */
+        .navbar.over-square .brand {
+            color: white;
+        }
+
+        .nav-links {
+            margin-left: auto;
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--text);
+            text-decoration: none;
+            padding: 0.5rem 0.9rem;
+            border-radius: 999px;
+            font-weight: 600;
+            background: transparent;
+            transition: background-color var(--transition), color var(--transition), transform var(--transition);
             position: relative;
         }
 
-        .navbar a::after {
-            content: '';
-            position: absolute;
-            bottom: -2px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: var(--primary);
-            transition: width var(--transition);
+        .navbar.over-square .nav-links a {
+            color: white;
         }
 
-        .navbar a:hover::after {
-            width: 100%;
+        .nav-links a:hover {
+            background: rgba(26, 188, 156, 0.12);
+            color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .navbar.over-square .nav-links a:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            left: 12%;
+            right: 12%;
+            bottom: -6px;
+            height: 3px;
+            border-radius: 2px;
+            background: transparent;
+            transition: background var(--transition);
+        }
+
+        .nav-links a.active::after {
+            background: linear-gradient(90deg, var(--primary), #16a085);
+        }
+
+        .navbar.over-square .nav-links a.active::after {
+            background: linear-gradient(90deg, white, rgba(255,255,255,0.7));
+        }
+
+        /* mobile toggle */
+        .nav-toggle {
+            display: none;
+            margin-left: 0.5rem;
+            background: transparent;
+            border: none;
+            color: inherit;
+            font-size: 1.25rem;
+            padding: 0.5rem;
+            transition: color var(--transition);
+            cursor: pointer;
+            position: relative;
+            z-index: 1001;
+        }
+
+        .navbar.over-square .nav-toggle {
+            color: white;
+        }
+
+        /* 移动端导航菜单样式 - 放在按钮正下方 */
+        .nav-open .nav-links {
+            display: flex;
+            flex-direction: column;
+            position: absolute;
+            top: 100%;
+            width: 130px;
+            left: 145px;
+            background: linear-gradient(to bottom, rgba(255,255,255,0.98), rgba(255,255,255,0.98));
+            border-radius: 10px;
+            padding: 0.75rem 1rem;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+            animation: slideDown 0.3s ease-out;
+            margin-top: 10px;
+            z-index: 999;
+        }
+
+        .navbar.over-square.nav-open .nav-links {
+            background: linear-gradient(to bottom, rgba(0,0,0,0.95), rgba(0,0,0,0.85));
+            color: white;
         }
 
         /* 卡片系统 */
@@ -102,6 +221,8 @@
             transform: translateY(20px);
             animation: fadeIn 0.6s forwards;
             animation-delay: 0.3s;
+            cursor: pointer;
+            transition: transform var(--transition), box-shadow var(--transition);
         }
 
         .card:hover {
@@ -132,23 +253,60 @@
                 padding: 1rem;
             }
             
-            .navbar nav {
-                justify-content: center;
+            .navbar .inner {
+                padding: 0 0.5rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .nav-toggle {
+                display: inline-flex;
+            }
+            
+            /* 移动端菜单链接样式 */
+            .nav-open .nav-links a {
+                padding: 0.75rem 1rem;
+                border-radius: 8px;
+                margin-bottom: 0.25rem;
+                text-align: center;
+                display: block;
+            }
+            
+            .nav-open .nav-links a:last-child {
+                margin-bottom: 0;
+            }
+            
+            .nav-open .nav-links a:hover {
+                background: rgba(26, 188, 156, 0.15);
+                transform: translateX(5px);
+            }
+            
+            .navbar.over-square.nav-open .nav-links a:hover {
+                background: rgba(255, 255, 255, 0.15);
             }
         }
     </style>
 </head>
 <body>
     <header class="header">
+        <div class="dark-judge-square"></div>
         <h1>Shawn's Website</h1>
     </header>
 
-    <div class="navbar">
-        <nav>
-            <a href="home">Home</a>
-            <a href="work">Work</a>
-            <a href="contact">Contact</a>
-        </nav>
+    <div class="navbar" id="navbar">
+        <div class="inner">
+            <a href="home" class="brand">Shawn's Website</a>
+            <button class="nav-toggle" aria-label="Toggle navigation" id="navToggle">
+                &#9776;
+            </button>
+            <div class="nav-links" id="navLinks">
+                <a href="home">Home</a>
+                <a href="work">Work</a>
+                <a href="news">News</a>
+            </div>
+        </div>
     </div>
 
     <main class="container">
@@ -162,16 +320,61 @@
         <section class="content">
             <article class="card" id="work">
                 <h2>Latest Projects</h2>
-                <p>Discover my creative works...</p>
+                <p>Shanghai Soong Ching Ling School</p>
             </article>
             <article class="card" id="experience">
                 <h2>Experience</h2>
-                <p>Professional journey...</p>
+                <p>Just a simple journey...</p>
             </article>
         </section>
     </main>
 
     <script>
+        // 导航菜单切换功能
+        const navToggle = document.getElementById('navToggle');
+        const navbar = document.getElementById('navbar');
+        const navLinks = document.getElementById('navLinks');
+        
+        navToggle.addEventListener('click', function(e) {
+            e.stopPropagation(); // 防止事件冒泡
+            navbar.classList.toggle('nav-open');
+            
+            // 切换图标
+            if (navbar.classList.contains('nav-open')) {
+                this.innerHTML = '&times;'; // 关闭图标
+            } else {
+                this.innerHTML = '&#9776;'; // 汉堡菜单图标
+            }
+        });
+        
+        // 点击导航链接后关闭移动菜单
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', function() {
+                if (window.innerWidth <= 768) {
+                    navbar.classList.remove('nav-open');
+                    navToggle.innerHTML = '&#9776;';
+                }
+            });
+        });
+        
+        // 点击页面其他区域关闭菜单
+        document.addEventListener('click', function(e) {
+            if (navbar.classList.contains('nav-open') && 
+                !navbar.contains(e.target) &&
+                window.innerWidth <= 768) {
+                navbar.classList.remove('nav-open');
+                navToggle.innerHTML = '&#9776;';
+            }
+        });
+        
+        // 窗口大小变化时重置菜单状态
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 768) {
+                navbar.classList.remove('nav-open');
+                navToggle.innerHTML = '&#9776;';
+            }
+        });
+
         // 平滑滚动
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function(e) {
@@ -204,6 +407,31 @@
         if (e.target.closest('a')) return;
         window.location.href = 'experience';
         });
+
+        // 检测导航栏是否接触正方形
+        const square = document.querySelector('.dark-judge-square');
+        
+        function checkNavbarOverSquare() {
+            if (!square) return;
+            
+            const navbarRect = navbar.getBoundingClientRect();
+            const squareRect = square.getBoundingClientRect();
+            
+            // 检测导航栏底部是否接触到正方形的顶部
+            // 并且导航栏还没有完全超过正方形的底部
+            if (navbarRect.bottom >= squareRect.top && navbarRect.bottom <= squareRect.bottom) {
+                navbar.classList.add('over-square');
+            } else {
+                navbar.classList.remove('over-square');
+            }
+        }
+        
+        // 初始检测
+        checkNavbarOverSquare();
+        
+        // 滚动时检测
+        window.addEventListener('scroll', checkNavbarOverSquare);
+        window.addEventListener('resize', checkNavbarOverSquare);
     </script>
 </body>
 </html>
